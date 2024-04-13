@@ -19,8 +19,6 @@ MEMORY="GPU_MEM = \"16\""
 
 #Add wifi support
 DISTRO_F="DISTRO_FEATURES:append = \"wifi\""
-#add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \"i2c-tools python3 ntp wpa-supplicant\""
 
 #License
 LICENSE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
@@ -29,10 +27,13 @@ LICENSE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
 MODULE_I2C="ENABLE_I2C = \"1\""
 
 #Autoload I2C module
-AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \"i2c-dev\""
+AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \"i2c-dev i2c-bcm2708\""
 
 #SSH
 IMAGE_F="IMAGE_FEATURES += \"ssh-server-openssh tools-debug\""
+
+#add firmware support 
+IMAGE_ADD="IMAGE_INSTALL:append = \"i2c-tools python3 ntp wpa-supplicant\""
 
 #Add extra packages is applicable
 CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \"i2c-config gpio-config\""
@@ -49,9 +50,6 @@ local_memory_info=$?
 cat conf/local.conf | grep "${DISTRO_F}" > /dev/null
 local_distro_info=$?
 
-cat conf/local.conf | grep "${IMAGE_ADD}" > /dev/null
-local_imgadd_info=$?
-
 cat conf/local.conf | grep "${LICENSE}" > /dev/null
 local_licn_info=$?
 
@@ -63,6 +61,9 @@ local_i2c_autoload_info=$?
 
 cat conf/local.conf | grep "${IMAGE_F}" > /dev/null
 local_imgf_info=$?
+
+cat conf/local.conf | grep "${IMAGE_ADD}" > /dev/null
+local_imgadd_info=$?
 
 if [ $local_conf_info -ne 0 ];then
 	echo "Append ${CONFLINE} in the local.conf file"
@@ -94,13 +95,6 @@ else
 	echo "${DISTRO_F} already exists in the local.conf file"
 fi
 
-if [ $local_imgadd_info -ne 0 ];then
-    echo "Append ${IMAGE_ADD} in the local.conf file"
-	echo ${IMAGE_ADD} >> conf/local.conf
-else
-	echo "${IMAGE_ADD} already exists in the local.conf file"
-fi
-
 if [ $local_licn_info -ne 0 ];then
     echo "Append ${LICENSE} in the local.conf file"
 	echo ${LICENSE} >> conf/local.conf
@@ -127,6 +121,13 @@ if [ $local_imgf_info -ne 0 ];then
 	echo ${IMAGE_F} >> conf/local.conf
 else
 	echo "${IMAGE_F} already exists in the local.conf file"
+fi
+
+if [ $local_imgadd_info -ne 0 ];then
+    echo "Append ${IMAGE_ADD} in the local.conf file"
+	echo ${IMAGE_ADD} >> conf/local.conf
+else
+	echo "${IMAGE_ADD} already exists in the local.conf file"
 fi
 
 bitbake-layers show-layers | grep "meta-raspberrypi" > /dev/null
