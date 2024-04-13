@@ -29,7 +29,7 @@ LICENSE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
 MODULE_I2C="ENABLE_I2C = \"1\""
 
 #Autoload I2C module
-AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \"i2cdev\""
+AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \"i2c-dev\""
 
 #SSH
 IMAGE_F="IMAGE_FEATURES += \"ssh-server-openssh tools-debug\""
