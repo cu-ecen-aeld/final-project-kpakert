@@ -20,7 +20,7 @@ MEMORY="GPU_MEM = \"16\""
 #Add wifi support
 DISTRO_F="DISTRO_FEATURES:append = \"wifi\""
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \"python3 ntp wpa-supplicant\""
+IMAGE_ADD="IMAGE_INSTALL:append = \"i2c-tools python3 ntp wpa-supplicant\""
 
 #License
 LICENSE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
