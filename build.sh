@@ -18,9 +18,9 @@ IMAGE="IMAGE_FSTYPES = \"wic.bz2 tar.bz2 ext3 rpi-sdimg\""
 MEMORY="GPU_MEM = \"16\""
 
 #Add wifi support
-DISTRO_F="DISTRO_FEATURES_append = \"wifi\""
+DISTRO_F="DISTRO_FEATURES:append = \"wifi\""
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL_append = \"linux-firmware-rpidistro-bcm43430 v4l-utils python3 ntp wpa-supplicant\""
+IMAGE_ADD="IMAGE_INSTALL:append = \"linux-firmware-rpidistro-bcm43430 v4l-utils python3 ntp wpa-supplicant\""
 
 
 #Licence
