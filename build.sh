@@ -18,7 +18,7 @@ IMAGE="IMAGE_FSTYPES = \"wic.bz2\""
 MEMORY="GPU_MEM = \"16\""
 
 #Licence
-LICENCE="LICENSE_FLAGS_WHITELIST = \"commercial\""
+LICENCE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
 
 cat conf/local.conf | grep "${CONFLINE}" > /dev/null
 local_conf_info=$?
