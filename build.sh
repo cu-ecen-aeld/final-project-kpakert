@@ -52,7 +52,7 @@ local_distro_info=$?
 cat conf/local.conf | grep "${IMAGE_ADD}" > /dev/null
 local_imgadd_info=$?
 
-cat conf/local.conf | grep "${LICENCE}" > /dev/null
+cat conf/local.conf | grep "${LICENSE}" > /dev/null
 local_licn_info=$?
 
 cat conf/local.conf | grep "${MODULE_I2C}" > /dev/null
@@ -102,10 +102,10 @@ else
 fi
 
 if [ $local_licn_info -ne 0 ];then
-    echo "Append ${LICENCE} in the local.conf file"
-	echo ${LICENCE} >> conf/local.conf
+    echo "Append ${LICENSE} in the local.conf file"
+	echo ${LICENSE} >> conf/local.conf
 else
-	echo "${LICENCE} already exists in the local.conf file"
+	echo "${LICENSE} already exists in the local.conf file"
 fi
 
 if [ $local_i2c_info -ne 0 ];then
