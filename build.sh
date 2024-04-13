@@ -17,6 +17,12 @@ IMAGE="IMAGE_FSTYPES = \"wic.bz2 tar.bz2 ext3 rpi-sdimg\""
 #Set GPU memory as minimum
 MEMORY="GPU_MEM = \"16\""
 
+#Add wifi support
+DISTRO_F="DISTRO_FEATURES_append = \"wifi\""
+#add firmware support 
+IMAGE_ADD="IMAGE_INSTALL_append = \"linux-firmware-rpidistro-bcm43430 v4l-utils python3 ntp wpa-supplicant\""
+
+
 #Licence
 LICENCE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
 
@@ -31,6 +37,12 @@ local_image_info=$?
 
 cat conf/local.conf | grep "${MEMORY}" > /dev/null
 local_memory_info=$?
+
+cat conf/local.conf | grep "${DISTRO_F}" > /dev/null
+local_distro_info=$?
+
+cat conf/local.conf | grep "${IMAGE_ADD}" > /dev/null
+local_imgadd_info=$?
 
 cat conf/local.conf | grep "${LICENCE}" > /dev/null
 local_licn_info=$?
@@ -61,6 +73,20 @@ else
 	echo "${MEMORY} already exists in the local.conf file"
 fi
 
+if [ $local_distro_info -ne 0 ];then
+    echo "Append ${DISTRO_F} in the local.conf file"
+	echo ${DISTRO_F} >> conf/local.conf
+else
+	echo "${DISTRO_F} already exists in the local.conf file"
+fi
+
+if [ $local_imgadd_info -ne 0 ];then
+    echo "Append ${IMAGE_ADD} in the local.conf file"
+	echo ${IMAGE_ADD} >> conf/local.conf
+else
+	echo "${IMAGE_ADD} already exists in the local.conf file"
+fi
+
 if [ $local_licn_info -ne 0 ];then
     echo "Append ${LICENCE} in the local.conf file"
 	echo ${LICENCE} >> conf/local.conf
@@ -77,6 +103,38 @@ fi
 
 bitbake-layers show-layers | grep "meta-raspberrypi" > /dev/null
 layer_info=$?
+
+bitbake-layers show-layers | grep "meta-python" > /dev/null
+layer_python_info=$?
+
+bitbake-layers show-layers | grep "meta-oe" > /dev/null
+layer_metaoe_info=$?
+
+bitbake-layers show-layers | grep "meta-networking" > /dev/null
+layer_networking_info=$?
+
+if [ $layer_metaoe_info -ne 0 ];then
+    echo "Adding meta-oe layer"
+	bitbake-layers add-layer ../meta-openembedded/meta-oe
+else
+	echo "layer meta-oe already exists"
+fi
+
+
+if [ $layer_python_info -ne 0 ];then
+    echo "Adding meta-python layer"
+	bitbake-layers add-layer ../meta-openembedded/meta-python
+else
+	echo "layer meta-python already exists"
+fi
+
+
+if [ $layer_networking_info -ne 0 ];then
+    echo "Adding meta-networking layer"
+	bitbake-layers add-layer ../meta-openembedded/meta-networking
+else
+	echo "layer meta-networking already exists"
+fi
 
 if [ $layer_info -ne 0 ];then
 	echo "Adding meta-raspberrypi layer"
