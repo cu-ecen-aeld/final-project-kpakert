@@ -27,16 +27,16 @@ LICENSE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
 MODULE_I2C="ENABLE_I2C = \"1\""
 
 #Autoload I2C module
-AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \"i2c-dev i2c-bcm2708\""
+AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \" i2c-dev i2c-bcm2708\""
 
 #SSH
-IMAGE_F="IMAGE_FEATURES += \"ssh-server-openssh tools-debug\""
+IMAGE_F="IMAGE_FEATURES += \" ssh-server-openssh tools-debug\""
 
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \"i2c-tools python3 ntp wpa-supplicant\""
+IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 ntp wpa-supplicant\""
 
 #Add extra packages is applicable
-CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \"i2c-config gpio-config\""
+CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
 
 cat conf/local.conf | grep "${CONFLINE}" > /dev/null
 local_conf_info=$?
