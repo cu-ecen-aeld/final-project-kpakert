@@ -9,16 +9,19 @@ git submodule update
 # local.conf won't exist until this step on first execution
 source poky/oe-init-build-env
 
-CONFLINE="MACHINE = \"raspberrypi3\""
+CONFLINE="MACHINE = \"raspberrypi4\""
 
 #Create image of the type rpi-sdimg
-IMAGE="IMAGE_FSTYPES = \"wic.bz2\""
+IMAGE="IMAGE_FSTYPES = \"wic.bz2 tar.bz2 ext3 rpi-sdimg\""
 
 #Set GPU memory as minimum
 MEMORY="GPU_MEM = \"16\""
 
 #Licence
 LICENCE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
+
+#SSH
+IMAGE_F="IMAGE_FEATURES += \"ssh-server-openssh tools-debug\""
 
 cat conf/local.conf | grep "${CONFLINE}" > /dev/null
 local_conf_info=$?
@@ -31,6 +34,9 @@ local_memory_info=$?
 
 cat conf/local.conf | grep "${LICENCE}" > /dev/null
 local_licn_info=$?
+
+cat conf/local.conf | grep "${IMAGE_F}" > /dev/null
+local_imgf_info=$?
 
 if [ $local_conf_info -ne 0 ];then
 	echo "Append ${CONFLINE} in the local.conf file"
@@ -62,6 +68,12 @@ else
 	echo "${LICENCE} already exists in the local.conf file"
 fi
 
+if [ $local_imgf_info -ne 0 ];then
+    echo "Append ${IMAGE_F} in the local.conf file"
+	echo ${IMAGE_F} >> conf/local.conf
+else
+	echo "${IMAGE_F} already exists in the local.conf file"
+fi
 
 bitbake-layers show-layers | grep "meta-raspberrypi" > /dev/null
 layer_info=$?
