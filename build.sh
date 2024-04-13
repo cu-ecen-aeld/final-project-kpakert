@@ -22,12 +22,20 @@ DISTRO_F="DISTRO_FEATURES:append = \"wifi\""
 #add firmware support 
 IMAGE_ADD="IMAGE_INSTALL:append = \"python3 ntp wpa-supplicant\""
 
+#License
+LICENSE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
 
-#Licence
-LICENCE="LICENSE_FLAGS_ACCEPTED = \"synaptics-killswitch\""
+#I2C
+MODULE_I2C="ENABLE_I2C = \"1\""
+
+#Autoload I2C module
+AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \"i2cdev\""
 
 #SSH
 IMAGE_F="IMAGE_FEATURES += \"ssh-server-openssh tools-debug\""
+
+#Add extra packages is applicable
+CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \"i2c-config gpio-config\""
 
 cat conf/local.conf | grep "${CONFLINE}" > /dev/null
 local_conf_info=$?
@@ -46,6 +54,12 @@ local_imgadd_info=$?
 
 cat conf/local.conf | grep "${LICENCE}" > /dev/null
 local_licn_info=$?
+
+cat conf/local.conf | grep "${MODULE_I2C}" > /dev/null
+local_i2c_info=$?
+
+cat conf/local.conf | grep "${AUTOLOAD_I2C}" > /dev/null
+local_i2c_autoload_info=$?
 
 cat conf/local.conf | grep "${IMAGE_F}" > /dev/null
 local_imgf_info=$?
@@ -94,6 +108,20 @@ else
 	echo "${LICENCE} already exists in the local.conf file"
 fi
 
+if [ $local_i2c_info -ne 0 ];then
+        echo "Append ${MODULE_I2C} in the local.conf file"
+        echo ${MODULE_I2C} >> conf/local.conf
+else
+        echo "${MODULE_I2C} already exists in the local.conf file"
+fi
+
+if [ $local_i2c_autoload_info -ne 0 ];then
+        echo "Append ${AUTOLOAD_I2C} in the local.conf file"
+        echo ${AUTOLOAD_I2C} >> conf/local.conf
+else
+        echo "${AUTOLOAD_I2C} already exists in the local.conf file"
+fi
+
 if [ $local_imgf_info -ne 0 ];then
     echo "Append ${IMAGE_F} in the local.conf file"
 	echo ${IMAGE_F} >> conf/local.conf
@@ -113,6 +141,9 @@ layer_metaoe_info=$?
 bitbake-layers show-layers | grep "meta-networking" > /dev/null
 layer_networking_info=$?
 
+bitbake-layers show-layers | grep "meta-i2c" > /dev/null
+layer_i2c_info=$?
+
 if [ $layer_metaoe_info -ne 0 ];then
     echo "Adding meta-oe layer"
 	bitbake-layers add-layer ../meta-openembedded/meta-oe
@@ -120,14 +151,12 @@ else
 	echo "layer meta-oe already exists"
 fi
 
-
 if [ $layer_python_info -ne 0 ];then
     echo "Adding meta-python layer"
 	bitbake-layers add-layer ../meta-openembedded/meta-python
 else
 	echo "layer meta-python already exists"
 fi
-
 
 if [ $layer_networking_info -ne 0 ];then
     echo "Adding meta-networking layer"
@@ -141,6 +170,23 @@ if [ $layer_info -ne 0 ];then
 	bitbake-layers add-layer ../meta-raspberrypi
 else
 	echo "layer meta-raspberrypi already exists"
+fi
+
+if [ $layer_i2c_info -ne 0 ];then
+        echo "Adding meta-i2c layer"
+        bitbake-layers add-layer ../meta-i2c
+else
+        echo "meta-i2c layer already exists"
+fi
+
+bitbake-layers show-layers | grep "meta-gpio" > /dev/null
+layer_info=$?
+
+if [ $layer_info -ne 0 ];then
+	echo "Adding meta-gpio layer"
+	bitbake-layers add-layer ../meta-gpio
+else
+	echo "meta-gpio layer already exists"
 fi
 
 set -e
