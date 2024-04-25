@@ -32,11 +32,12 @@ AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \" i2c-dev i2c-bcm2708\""
 #SSH
 IMAGE_F="IMAGE_FEATURES += \" ssh-server-openssh tools-debug\""
 
+
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 ntp wpa-supplicant\""
+IMAGE_ADD="IMAGE_INSTALL:append = \" libgpiod libgpiod-dev libgpiod-tools i2c-tools python3-gpiod python3 python3-pip python3-dev ntp rpi-gpio wpa-supplicant\""
 
 #Add extra packages is applicable
-CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
+#CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
 
 cat conf/local.conf | grep "${CONFLINE}" > /dev/null
 local_conf_info=$?
@@ -142,8 +143,8 @@ layer_metaoe_info=$?
 bitbake-layers show-layers | grep "meta-networking" > /dev/null
 layer_networking_info=$?
 
-bitbake-layers show-layers | grep "meta-i2c" > /dev/null
-layer_i2c_info=$?
+#bitbake-layers show-layers | grep "meta-i2c" > /dev/null
+#layer_i2c_info=$?
 
 if [ $layer_metaoe_info -ne 0 ];then
     echo "Adding meta-oe layer"
@@ -173,22 +174,24 @@ else
 	echo "layer meta-raspberrypi already exists"
 fi
 
-if [ $layer_i2c_info -ne 0 ];then
-        echo "Adding meta-i2c layer"
-        bitbake-layers add-layer ../meta-i2c
-else
-        echo "meta-i2c layer already exists"
-fi
+#if [ $layer_i2c_info -ne 0 ];then
+#        echo "Adding meta-i2c layer"
+#        bitbake-layers add-layer ../meta-i2c
+#else
+#        echo "meta-i2c layer already exists"
+#fi
 
-bitbake-layers show-layers | grep "meta-gpio" > /dev/null
-layer_info=$?
+#bitbake-layers show-layers | grep "meta-gpio" > /dev/null
+#layer_info=$?
 
-if [ $layer_info -ne 0 ];then
-	echo "Adding meta-gpio layer"
-	bitbake-layers add-layer ../meta-gpio
-else
-	echo "meta-gpio layer already exists"
-fi
+#if [ $layer_info -ne 0 ];then
+#	echo "Adding meta-gpio layer"
+#	bitbake-layers add-layer ../meta-gpio
+#else
+#	echo "meta-gpio layer already exists"
+#fi
 
 set -e
 bitbake core-image-base
+#bitbake -s | grep ^python3
+#bitbake -s | grep adafruit
