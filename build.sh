@@ -34,7 +34,7 @@ IMAGE_F="IMAGE_FEATURES += \" ssh-server-openssh tools-debug\""
 
 
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \" libgpiod libgpiod-dev libgpiod-tools i2c-tools python3-gpiod python3 python3-pip python3-dev ntp rpi-gpio wpa-supplicant\""
+IMAGE_ADD="IMAGE_INSTALL:append = \" libgpiod libgpiod-dev libgpiod-tools i2c-tools python3-gpiod python3 python3-pip python3-dev ntp rpi-gpio python3-adafruit-circuitpython-busdevice wpa-supplicant\""
 
 #Add extra packages is applicable
 #CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
@@ -143,6 +143,9 @@ layer_metaoe_info=$?
 bitbake-layers show-layers | grep "meta-networking" > /dev/null
 layer_networking_info=$?
 
+bitbake-layers show-layers | grep "meta-adafruit-pm25" > /dev/null
+layer_pm25_info=$?
+
 #bitbake-layers show-layers | grep "meta-i2c" > /dev/null
 #layer_i2c_info=$?
 
@@ -165,6 +168,13 @@ if [ $layer_networking_info -ne 0 ];then
 	bitbake-layers add-layer ../meta-openembedded/meta-networking
 else
 	echo "layer meta-networking already exists"
+fi
+
+if [ $layer_pm25_info -ne 0 ];then
+    echo "Adding meta-adafruit-pm25 layer"
+	bitbake-layers add-layer ../meta-adafruit-pm25
+else
+	echo "layer meta-adafruit-pm25 already exists"
 fi
 
 if [ $layer_info -ne 0 ];then
@@ -195,3 +205,4 @@ set -e
 bitbake core-image-base
 #bitbake -s | grep ^python3
 #bitbake -s | grep adafruit
+#bitbake-layers create-layer ../meta-adafruit-pm25
