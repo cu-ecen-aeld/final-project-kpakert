@@ -32,9 +32,21 @@ AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \" i2c-dev i2c-bcm2708\""
 #SSH
 IMAGE_F="IMAGE_FEATURES += \" ssh-server-openssh tools-debug\""
 
+#LIGPIOD Version
+LIGBPIOD = "PREFERRED_VERSION_libgpiod = \"1.6.4\""
+
 
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \" libgpiod libgpiod-dev libgpiod-tools i2c-tools python3-gpiod python3 python3-pip python3-dev ntp rpi-gpio python3-adafruit-circuitpython-busdevice wpa-supplicant\""
+IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 python3-pip python3-dev ntp rpi-gpio python3-core libgpiod libgpiod-dev libgpiod-tools wpa-supplicant \
+    bcm2835-tests \
+    raspi-gpio \
+    rpio \
+    python3-adafruit-circuitpython-register \
+    python3-adafruit-platformdetect \
+    python3-adafruit-pureio \
+    python3-rtimu \
+    python3-adafruit-blinka \
+    python3-adafruit-circuitpython-busdevice\""
 
 #Add extra packages is applicable
 #CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
@@ -59,6 +71,9 @@ local_i2c_info=$?
 
 cat conf/local.conf | grep "${AUTOLOAD_I2C}" > /dev/null
 local_i2c_autoload_info=$?
+
+cat conf/local.conf | grep "${LIBGPIOD}" > /dev/null
+local_libgpiod_info=$?
 
 cat conf/local.conf | grep "${IMAGE_F}" > /dev/null
 local_imgf_info=$?
@@ -117,6 +132,13 @@ else
         echo "${AUTOLOAD_I2C} already exists in the local.conf file"
 fi
 
+if [ $local_libgpiod_info -ne 0 ];then
+        echo "Append ${LIBGPIOD} in the local.conf file"
+        echo ${LIBGPIOD} >> conf/local.conf
+else
+        echo "${LIBGPIOD} already exists in the local.conf file"
+fi
+
 if [ $local_imgf_info -ne 0 ];then
     echo "Append ${IMAGE_F} in the local.conf file"
 	echo ${IMAGE_F} >> conf/local.conf
@@ -170,12 +192,12 @@ else
 	echo "layer meta-networking already exists"
 fi
 
-if [ $layer_pm25_info -ne 0 ];then
-    echo "Adding meta-adafruit-pm25 layer"
-	bitbake-layers add-layer ../meta-adafruit-pm25
-else
-	echo "layer meta-adafruit-pm25 already exists"
-fi
+#if [ $layer_pm25_info -ne 0 ];then
+#    echo "Adding meta-adafruit-pm25 layer"
+#	bitbake-layers add-layer ../meta-adafruit-pm25
+#else
+#	echo "layer meta-adafruit-pm25 already exists"
+#fi
 
 if [ $layer_info -ne 0 ];then
 	echo "Adding meta-raspberrypi layer"
@@ -203,6 +225,9 @@ fi
 
 set -e
 bitbake core-image-base
+#bitbake -C compile libgpiod
+#bitbake rpi-test-image
 #bitbake -s | grep ^python3
 #bitbake -s | grep adafruit
 #bitbake-layers create-layer ../meta-adafruit-pm25
+#bitbake -fc cleanall libgpiod
