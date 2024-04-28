@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = "git://git@github.com/kpakert/embedded-linux-final-project-kpakert;protocol=ssh;branch=main"
 
 # set to reference a specific commit hash in your assignment repo
-SRCREV = "4f6ac896219ebb9c8280066e45c14c8cb458aa46"
+SRCREV = "f02c43743f4a9b88698efd359e85b080d5b6273f"
 
 # This sets your staging directory based on WORKDIR, where WORKDIR is defined at 
 # https://docs.yoctoproject.org/ref-manual/variables.html?highlight=workdir#term-WORKDIR
