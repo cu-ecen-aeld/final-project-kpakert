@@ -50,7 +50,7 @@ IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 ntp rpi-gpio python3-core
     python-adafruit-circuitpython-pm25 \""
 
 #Add extra packages is applicable
-#CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
+CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" python-pm25-app\""
 
 cat conf/local.conf | grep "${CONFLINE}" > /dev/null
 local_conf_info=$?
@@ -81,6 +81,9 @@ local_imgf_info=$?
 
 cat conf/local.conf | grep "${IMAGE_ADD}" > /dev/null
 local_imgadd_info=$?
+
+cat conf/local.conf | grep "${CORE_IM_ADD}" > /dev/null
+local_core_im_add_info=$?
 
 if [ $local_conf_info -ne 0 ];then
 	echo "Append ${CONFLINE} in the local.conf file"
@@ -152,6 +155,13 @@ if [ $local_imgadd_info -ne 0 ];then
 	echo ${IMAGE_ADD} >> conf/local.conf
 else
 	echo "${IMAGE_ADD} already exists in the local.conf file"
+fi
+
+if [ $local_core_im_add_info -ne 0 ];then
+    echo "Append ${CORE_IM_ADD} in the local.conf file"
+	echo ${CORE_IM_ADD} >> conf/local.conf
+else
+	echo "${CORE_IM_ADD} already exists in the local.conf file"
 fi
 
 bitbake-layers show-layers | grep "meta-raspberrypi" > /dev/null
