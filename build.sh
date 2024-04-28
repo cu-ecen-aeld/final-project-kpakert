@@ -37,7 +37,7 @@ LIBGPIOD_VER="PREFERRED_VERSION_libgpiod = \"1.6.4\""
 
 
 #add firmware support 
-IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 python3-pip python3-dev ntp rpi-gpio python3-core libgpiod libgpiod-dev libgpiod-tools wpa-supplicant \
+IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 ntp rpi-gpio python3-core libgpiod libgpiod-dev libgpiod-tools wpa-supplicant \
     bcm2835-tests \
     raspi-gpio \
     rpio \
