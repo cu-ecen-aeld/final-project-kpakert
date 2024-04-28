@@ -1,13 +1,13 @@
 # See https://git.yoctoproject.org/poky/tree/meta/files/common-licenses
-#LICENSE = "MIT"
-#LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 
 # about how to setup ssh-agent for passwordless access
-SRC_URI = "git://git@github.com/kpakert/embedded-linux-final-project-kpakert;protocol=ssh;branch=master"
+SRC_URI = "git://git@github.com/kpakert/embedded-linux-final-project-kpakert;protocol=ssh;branch=main"
 
 # set to reference a specific commit hash in your assignment repo
-SRCREV = "dfc582afa59b8e333edb112122972847d7b33286"
+SRCREV = "42da40fa9aaf6cf91aa90e66ced7008873dc9fe7"
 
 # This sets your staging directory based on WORKDIR, where WORKDIR is defined at 
 # https://docs.yoctoproject.org/ref-manual/variables.html?highlight=workdir#term-WORKDIR
