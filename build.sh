@@ -32,8 +32,8 @@ AUTOLOAD_I2C="KERNEL_MODULE_AUTOLOAD:rpi += \" i2c-dev i2c-bcm2708\""
 #SSH
 IMAGE_F="IMAGE_FEATURES += \" ssh-server-openssh tools-debug\""
 
-#LIGPIOD Version
-LIGBPIOD = "PREFERRED_VERSION_libgpiod = \"1.6.4\""
+#LIBGPIOD Version
+LIBGPIOD_VER="PREFERRED_VERSION_libgpiod = \"1.6.4\""
 
 
 #add firmware support 
@@ -46,7 +46,8 @@ IMAGE_ADD="IMAGE_INSTALL:append = \" i2c-tools python3 python3-pip python3-dev n
     python3-adafruit-pureio \
     python3-rtimu \
     python3-adafruit-blinka \
-    python3-adafruit-circuitpython-busdevice\""
+    python3-adafruit-circuitpython-busdevice \
+    python-adafruit-circuitpython-pm25 \""
 
 #Add extra packages is applicable
 #CORE_IM_ADD="CORE_IMAGE_EXTRA_INSTALL += \" i2c-config gpio-config\""
@@ -72,8 +73,8 @@ local_i2c_info=$?
 cat conf/local.conf | grep "${AUTOLOAD_I2C}" > /dev/null
 local_i2c_autoload_info=$?
 
-cat conf/local.conf | grep "${LIBGPIOD}" > /dev/null
-local_libgpiod_info=$?
+cat conf/local.conf | grep "${LIBGPIOD_VER}" > /dev/null
+local_libgpiod_ver_info=$?
 
 cat conf/local.conf | grep "${IMAGE_F}" > /dev/null
 local_imgf_info=$?
@@ -132,11 +133,11 @@ else
         echo "${AUTOLOAD_I2C} already exists in the local.conf file"
 fi
 
-if [ $local_libgpiod_info -ne 0 ];then
-        echo "Append ${LIBGPIOD} in the local.conf file"
-        echo ${LIBGPIOD} >> conf/local.conf
+if [ $local_libgpiod_ver_info -ne 0 ];then
+        echo "Append ${LIBGPIOD_VER} in the local.conf file"
+        echo ${LIBGPIOD_VER} >> conf/local.conf
 else
-        echo "${LIBGPIOD} already exists in the local.conf file"
+        echo "${LIBGPIOD_VER} already exists in the local.conf file"
 fi
 
 if [ $local_imgf_info -ne 0 ];then
@@ -192,12 +193,12 @@ else
 	echo "layer meta-networking already exists"
 fi
 
-#if [ $layer_pm25_info -ne 0 ];then
-#    echo "Adding meta-adafruit-pm25 layer"
-#	bitbake-layers add-layer ../meta-adafruit-pm25
-#else
-#	echo "layer meta-adafruit-pm25 already exists"
-#fi
+if [ $layer_pm25_info -ne 0 ];then
+    echo "Adding meta-adafruit-pm25 layer"
+	bitbake-layers add-layer ../meta-adafruit-pm25
+else
+	echo "layer meta-adafruit-pm25 already exists"
+fi
 
 if [ $layer_info -ne 0 ];then
 	echo "Adding meta-raspberrypi layer"
